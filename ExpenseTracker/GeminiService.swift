@@ -32,6 +32,7 @@ struct GeminiService {
             throw NSError(domain: "ImageError", code: -1, userInfo: [NSLocalizedDescriptionKey: "画像生成に失敗しました"])
         }
         
+            let ai = FirebaseAI.ai(backend: .googleAI(apiKey: apiKey))
         // 3. プロンプト（命令文）の作成
         // 設計書の「プロンプト設計」[cite: 55] に基づいて記述
         let prompt = """
