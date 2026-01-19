@@ -4,16 +4,32 @@ import GoogleGenerativeAI // 追加したSDKをインポート
 
 struct GeminiService {
     
-    private let apiKey = "THE API KEY"
+    // リサイズ用のヘルパーメソッドを構造体の中に追加
+    private func resizeImage(image: UIImage, targetWidth: CGFloat) -> UIImage {
+        let scale = targetWidth / image.size.width
+        let targetHeight = image.size.height * scale
+        let size = CGSize(width: targetWidth, height: targetHeight)
+        
+        let renderer = UIGraphicsImageRenderer(size: size)
+        return renderer.image { _ in
+            image.draw(in: CGRect(origin: .zero, size: size))
+        }
+    
+    private let apiKey = "AIzaSyABplHvPY4MMfmrXdtNfecR-96QxGUKELg"
     
     func analyzeReceipt(image: UIImage) async throws -> [ExpenseItemParsed] {
-        // 1. モデルの準備 (設計書通り gemini-1.5-flash を指定 [cite: 54])
-        let model = GenerativeModel(name: "gemini-1.5-flash", apiKey: apiKey)
+        let model = GenerativeModel(name: "gemini-2.5-flash", apiKey: apiKey)
         
-        // 2. 画像の準備 (API制限対策として圧縮)
-        guard let imageData = image.jpegData(compressionQuality: 0.8),
-              let resizedImage = UIImage(data: imageData) else {
-            throw NSError(domain: "ImageError", code: -1, userInfo: [NSLocalizedDescriptionKey: "画像の処理に失敗しました"])
+        // 画像を最大幅1024pxにリサイズ（AI解析にはこれで十分です）
+        let resizedImage = resizeImage(image: image, targetWidth: 1024)
+        
+        guard let imageData = resizedImage.jpegData(compressionQuality: 0.7) else {
+            throw NSError(domain: "ImageError", code: -1, userInfo: [NSLocalizedDescriptionKey: "画像の圧縮に失敗しました"])
+        }
+        
+        // SDKに渡す画像を再生成
+        guard let finalImage = UIImage(data: imageData) else {
+            throw NSError(domain: "ImageError", code: -1, userInfo: [NSLocalizedDescriptionKey: "画像生成に失敗しました"])
         }
         
         // 3. プロンプト（命令文）の作成

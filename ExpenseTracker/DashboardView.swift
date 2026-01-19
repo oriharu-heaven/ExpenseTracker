@@ -143,7 +143,10 @@ struct DashboardView: View {
             // 画像がセットされたら解析画面へ遷移
             .onChange(of: selectedImage) { oldValue, newValue in
                 if newValue != nil {
-                    showScanResult = true
+                    // 0.5秒待ってから遷移させることで、ImagePickerの閉じアニメーションとの衝突を防ぐ
+                    DispatchQueue.main.asyncAfter(deadline: .now() + 0.5) {
+                        showScanResult = true
+                    }
                 }
             }
             // 解析画面の表示
