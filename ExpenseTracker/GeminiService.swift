@@ -1,5 +1,5 @@
 import SwiftUI
-import GoogleGenerativeAI // 追加したSDKをインポート
+import FirebaseAILogic // 1. インポート先を変更
 
 
 struct GeminiService {
@@ -14,25 +14,23 @@ struct GeminiService {
         return renderer.image { _ in
             image.draw(in: CGRect(origin: .zero, size: size))
         }
+    }
     
-    private let apiKey = "AIzaSyABplHvPY4MMfmrXdtNfecR-96QxGUKELg"
-    
-    func analyzeReceipt(image: UIImage) async throws -> [ExpenseItemParsed] {
-        let model = GenerativeModel(name: "gemini-2.5-flash", apiKey: apiKey)
+    private let apiKey = APIKey.default
         
-        // 画像を最大幅1024pxにリサイズ（AI解析にはこれで十分です）
-        let resizedImage = resizeImage(image: image, targetWidth: 1024)
-        
-        guard let imageData = resizedImage.jpegData(compressionQuality: 0.7) else {
-            throw NSError(domain: "ImageError", code: -1, userInfo: [NSLocalizedDescriptionKey: "画像の圧縮に失敗しました"])
-        }
-        
-        // SDKに渡す画像を再生成
-        guard let finalImage = UIImage(data: imageData) else {
-            throw NSError(domain: "ImageError", code: -1, userInfo: [NSLocalizedDescriptionKey: "画像生成に失敗しました"])
-        }
-        
+        func analyzeReceipt(image: UIImage) async throws -> [ExpenseItemParsed] {
+            // 2. サービスを初期化 (APIキーを使用する backend: .googleAI を指定)
             let ai = FirebaseAI.ai(backend: .googleAI(apiKey: apiKey))
+            
+            // 3. モデルの取得
+            let model = ai.getGenerativeModel(name: "gemini-2.5-flash")
+            
+            // --- 以下の画像圧縮やプロンプト処理は、従来のロジックがそのまま使えます ---
+            guard let imageData = image.jpegData(compressionQuality: 0.8) else {
+                throw NSError(domain: "ImageError", code: -1)
+            }
+            
+            
         // 3. プロンプト（命令文）の作成
         // 設計書の「プロンプト設計」[cite: 55] に基づいて記述
         let prompt = """
