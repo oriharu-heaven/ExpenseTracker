@@ -2,70 +2,55 @@ import SwiftUI
 import SwiftData
 
 struct HistoryView: View {
-    // データベース操作用
     @Environment(\.modelContext) private var modelContext
-    
-    // 【重要】データベースからデータを自動で取ってくる魔法
-    // sort: 日付順に並び替え, order: .reverse (新しい順)
     @Query(sort: \ExpenseItem.date, order: .reverse) private var items: [ExpenseItem]
+    
+    // 編集画面表示用の状態変数
+    @State private var selectedItem: ExpenseItem?
     
     var body: some View {
         NavigationStack {
             List {
-                // items配列の中身をループして表示
                 ForEach(items) { item in
-                    HStack {
-                        // カテゴリごとのアイコン
-                        Image(systemName: item.category.icon)
-                            .foregroundColor(.blue)
-                            .frame(width: 30)
-                        
-                        VStack(alignment: .leading) {
-                            Text(item.title)
-                                .font(.body)
+                    // ボタンにしてタップ可能にする
+                    Button {
+                        selectedItem = item
+                    } label: {
+                        HStack {
+                            Image(systemName: item.category.icon)
+                                .foregroundColor(.blue)
+                                .frame(width: 30)
                             
-                            // 日付と経費フラグの表示
-                            HStack {
-                                Text(item.date, format: .dateTime.month().day())
-                                    .foregroundColor(.gray)
-                                
-                                if item.isBusiness {
-                                    Text("経費")
-                                        .font(.caption2)
-                                        .padding(.horizontal, 4)
-                                        .background(Color.red.opacity(0.1))
-                                        .foregroundColor(.red)
-                                        .cornerRadius(4)
-                                }
+                            VStack(alignment: .leading) {
+                                Text(item.title).font(.body)
+                                HStack {
+                                    Text(item.date, format: .dateTime.month().day())
+                                    if item.isBusiness {
+                                        Text("経費").font(.caption2).padding(2).background(Color.red.opacity(0.1)).foregroundColor(.red)
+                                    }
+                                }.font(.caption).foregroundColor(.gray)
                             }
-                            .font(.caption)
+                            Spacer()
+                            Text("¥\(item.amount)").font(.headline)
                         }
-                        
-                        Spacer()
-                        
-                        // 金額表示
-                        Text("¥\(item.amount)")
-                            .font(.headline)
                     }
+                    .buttonStyle(.plain) // リストの標準的な見た目を維持
                 }
-                // スワイプで削除する機能
                 .onDelete(perform: deleteItems)
             }
             .navigationTitle("履歴一覧")
-            // データがない時の表示
             .overlay {
                 if items.isEmpty {
-                    ContentUnavailableView(
-                        "データがありません",
-                        systemImage: "list.bullet.clipboard",
-                        description: Text("ホーム画面の＋ボタンから\n最初の支出を記録しましょう")
-                    )
+                    ContentUnavailableView("データがありません", systemImage: "list.bullet.clipboard")
                 }
+            }
+            // シートで編集画面を開く
+            .sheet(item: $selectedItem) { item in
+                InputFormView(itemToEdit: item)
             }
         }
     }
     
-    // 削除処理
     private func deleteItems(at offsets: IndexSet) {
         withAnimation {
             for index in offsets {
@@ -73,9 +58,4 @@ struct HistoryView: View {
             }
         }
     }
-}
-
-#Preview {
-    HistoryView()
-        .modelContainer(for: ExpenseItem.self, inMemory: true)
 }
