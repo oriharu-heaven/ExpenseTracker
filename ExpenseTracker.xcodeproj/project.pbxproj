@@ -7,7 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
-		49D71CCC2F1E627C00F2D7B6 /* FirebaseAILogic in Frameworks */ = {isa = PBXBuildFile; productRef = 49D71CCB2F1E627C00F2D7B6 /* FirebaseAILogic */; };
+		49D71CD52F21E0B400F2D7B6 /* FirebaseAILogic in Frameworks */ = {isa = PBXBuildFile; productRef = 49D71CD42F21E0B400F2D7B6 /* FirebaseAILogic */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -27,7 +27,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				49D71CCC2F1E627C00F2D7B6 /* FirebaseAILogic in Frameworks */,
+				49D71CD52F21E0B400F2D7B6 /* FirebaseAILogic in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -70,7 +70,7 @@
 			);
 			name = ExpenseTracker;
 			packageProductDependencies = (
-				49D71CCB2F1E627C00F2D7B6 /* FirebaseAILogic */,
+				49D71CD42F21E0B400F2D7B6 /* FirebaseAILogic */,
 			);
 			productName = ExpenseTracker;
 			productReference = 49BD46F02F1DEC34002DB108 /* ExpenseTracker.app */;
@@ -101,7 +101,7 @@
 			mainGroup = 49BD46E72F1DEC34002DB108;
 			minimizedProjectReferenceProxies = 1;
 			packageReferences = (
-				49D71CCA2F1E627C00F2D7B6 /* XCRemoteSwiftPackageReference "firebase-ios-sdk" */,
+				49D71CD32F21E0B400F2D7B6 /* XCRemoteSwiftPackageReference "firebase-ios-sdk" */,
 			);
 			preferredProjectObjectVersion = 77;
 			productRefGroup = 49BD46F12F1DEC34002DB108 /* Products */;
@@ -339,7 +339,7 @@
 /* End XCConfigurationList section */
 
 /* Begin XCRemoteSwiftPackageReference section */
-		49D71CCA2F1E627C00F2D7B6 /* XCRemoteSwiftPackageReference "firebase-ios-sdk" */ = {
+		49D71CD32F21E0B400F2D7B6 /* XCRemoteSwiftPackageReference "firebase-ios-sdk" */ = {
 			isa = XCRemoteSwiftPackageReference;
 			repositoryURL = "https://github.com/firebase/firebase-ios-sdk";
 			requirement = {
@@ -350,9 +350,9 @@
 /* End XCRemoteSwiftPackageReference section */
 
 /* Begin XCSwiftPackageProductDependency section */
-		49D71CCB2F1E627C00F2D7B6 /* FirebaseAILogic */ = {
+		49D71CD42F21E0B400F2D7B6 /* FirebaseAILogic */ = {
 			isa = XCSwiftPackageProductDependency;
-			package = 49D71CCA2F1E627C00F2D7B6 /* XCRemoteSwiftPackageReference "firebase-ios-sdk" */;
+			package = 49D71CD32F21E0B400F2D7B6 /* XCRemoteSwiftPackageReference "firebase-ios-sdk" */;
 			productName = FirebaseAILogic;
 		};
 /* End XCSwiftPackageProductDependency section */

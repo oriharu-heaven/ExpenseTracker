@@ -1,11 +1,11 @@
 import SwiftUI
 import SwiftData
+import FirebaseCore // Firebaseの初期化に必須です
 
 @main
 struct ExpenseTrackerApp: App {
     // アプリ全体のデータベース設定
-    // ここで ExpenseItem.self を指定することで、
-    // 「ExpenseItem という型のデータを保存する場所を作ってね」と指示しています。
+    // ExpenseItem型のデータを保存するためのコンテナを作成します
     var sharedModelContainer: ModelContainer = {
         let schema = Schema([
             ExpenseItem.self,
@@ -19,11 +19,18 @@ struct ExpenseTrackerApp: App {
         }
     }()
 
+    // 【修正箇所】SwiftUIのライフサイクルに合わせて、init()でFirebaseを初期化します
+    // これにより、AI機能が呼ばれる前に確実にFirebaseの準備が整います
+    init() {
+        FirebaseApp.configure()
+        print("Firebase successfully initialized.")
+    }
+
     var body: some Scene {
         WindowGroup {
             ContentView()
         }
-        // ここでアプリ全体にデータベース機能(container)を注入します
+        // アプリ全体にSwiftDataのデータベース機能を注入します
         .modelContainer(sharedModelContainer)
     }
 }
